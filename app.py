@@ -4,6 +4,7 @@ app = Flask(__name__)
 
 """A sample application to demonstrate the usage of HTML forms in Flask routes."""
 
+
 @app.route('/')
 def home():
     """Shows the homepage."""
@@ -20,26 +21,28 @@ def home():
 @app.route('/simple')
 def simple_pizza_order():
     """Shows a simple order form."""
-    
-    # TOOD: Change the form element below to include action="/simple_results" 
+
+    # TOOD: Change the form element below to include action="/simple_results"
     # and method="POST"
 
     return """
-    <form>
+    <form action="/simple_results"  >
     What's your favorite pizza flavor?
     <input type="text" name="pizza_flavor">
     <input type="submit" value="Submit">
     </form>
     """
 
-@app.route('/simple_results', methods=['GET', 'POST'])
+
+@app.route('/simple_results', )
 def simple_pizza_results():
     """Processes & shows results for a simple order form."""
+    pizzaFlav = request.args.get("pizza_flavor")
 
-    # TODO: Use `request.args.get()` to retrieve the user's pizza flavor, then 
-    # include it in the response.
+    print(request.args)
 
-    return "Your order has been received!"
+    return f"Your order {pizzaFlav} has been received!"
+
 
 @app.route('/complex')
 def complex_pizza_order():
@@ -49,7 +52,7 @@ def complex_pizza_order():
     <h1>Welcome to PIZZA PIZZA ordering</h1>
     <p>We deliver your pizza in 40 minutes max. If not - Pizza's on us!</p>
     <p>Your details:</p>
-    <form action="/complex_results", method="GET">
+    <form action="/complex_results">
     <p>
         <label for="email">Email:</label><br>
         <input type="email" name="email" placeholder="ex: myname@example.com">
@@ -103,21 +106,22 @@ def complex_pizza_order():
     </form>
     """
 
+
 @app.route('/complex_results', methods=['GET', 'POST'])
 def complex_pizza_results():
     """Processes & shows results for a complex pizza order form."""
 
     # TODO: Uncomment the following lines to see the form key/value pairs
-    # print('------------------- REQUEST.ARGS -------------------------')
-    # print(request.args)
-    # print('----------------------------------------------------------')
+    print('------------------- REQUEST.ARGS -------------------------')
+    print(request.args)
+    print('----------------------------------------------------------')
 
-    users_email = '' # TODO: Replace me!
-    users_phone = '' # TODO: Replace me!
-    crust_type = '' # TODO: Replace me!
-    pizza_size = '' # TODO: Replace me!
+    users_email = request.args.get("email")  # TODO: Replace me!
+    users_phone = request.args.get("phone")  # TODO: Replace me!
+    crust_type = request.args.get("type")  # TODO: Replace me!
+    pizza_size = request.args.get("size")  # TODO: Replace me!
     list_of_toppings = request.args.getlist('toppings')
-    accepted_terms = '' # TODO: Replace me!
+    accepted_terms = request.args.get("terms")  # TODO: Replace me!
 
     if accepted_terms != 'accepted':
         return 'Please accept the terms and conditions and try again!'
@@ -130,6 +134,7 @@ def complex_pizza_results():
     You ordered a {crust_type} crust pizza of size {pizza_size}-inch
     with the following toppings: {', '.join(list_of_toppings)}
     """
+
 
 if __name__ == '__main__':
     app.run(debug=True)
